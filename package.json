@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Demontie/clean-ts-course/issues"
   },
-  "homepage": "https://github.com/Demontie/clean-ts-course#readme"
+  "homepage": "https://github.com/Demontie/clean-ts-course#readme",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.1.0"
+  }
 }
