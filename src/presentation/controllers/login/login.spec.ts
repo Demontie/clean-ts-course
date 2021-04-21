@@ -2,13 +2,20 @@ import { LoginController } from './login'
 import { badRequest } from '../../helpers/http-helper'
 import { MissingParamError } from '../../erros'
 
-const moveSut = (): LoginController => {
-  return new LoginController()
+interface SutTypes {
+  sut: LoginController
+}
+
+const moveSut = (): SutTypes => {
+  const sut = new LoginController()
+  return {
+    sut
+  }
 }
 
 describe('Login Controller', () => {
   test('Should return 400 if no email is provided', async () => {
-    const sut = moveSut()
+    const { sut } = moveSut()
     const httpRequest = {
       body: {
         password: 'any_password'
@@ -19,7 +26,7 @@ describe('Login Controller', () => {
   })
 
   test('Should return 400 if no password is provided', async () => {
-    const sut = moveSut()
+    const { sut } = moveSut()
     const httpRequest = {
       body: {
         email: 'any_email@mail.com'
