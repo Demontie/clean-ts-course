@@ -16,7 +16,7 @@ services:
     restart: always
     command: npm start    
     volumes:
-      - ./dist/:./clean-ts-course/dist/      
+      - ./dist/:/clean-ts-course/dist/      
     ports:
       - 5050:5050      
     links:
