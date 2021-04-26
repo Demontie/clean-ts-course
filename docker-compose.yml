@@ -14,10 +14,12 @@ services:
     build: .    
     image: clean-ts-course   
     restart: always
-    command: npm start    
+    command: npm run debug    
     volumes:
       - ./dist/:/clean-ts-course/dist/      
+      - ./package.json:/clean-ts-course/package.json
     ports:
       - 5050:5050      
+      - 9222:9222
     links:
       - mongo
