@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  mongo:
+    container_name: mongo-container
+    image: mongo:4
+    restart: always
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - 27017:27017
+  api:
+    container_name: api-container
+    build: .    
+    image: clean-ts-course   
+    restart: always
+    command: npm start    
+    volumes:
+      - ./dist/:./clean-ts-course/dist/      
+    ports:
+      - 5050:5050      
+    links:
+      - mongo
