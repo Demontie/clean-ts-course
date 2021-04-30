@@ -1,6 +1,6 @@
 {
   "name": "clean-ts-course",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "NodeJs Rest API and GraphQL usando TDD, Clean Architecture, Typescript e Design Patterns",
   "main": "index.js",
   "scripts": {
