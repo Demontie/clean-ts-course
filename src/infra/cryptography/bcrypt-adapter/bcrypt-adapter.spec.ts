@@ -16,50 +16,54 @@ const makeSut = (): BcryptAdapter => {
 }
 
 describe('Bcrypt Adapter', () => {
-  test('Shold call hash with correct values', async () => {
-    const sut = makeSut()
-    const hashSpy = jest.spyOn(bcrypt, 'hash')
-    await sut.hash('any_value')
-    expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
+  describe('hash()', () => {
+    test('Shold call hash with correct values', async () => {
+      const sut = makeSut()
+      const hashSpy = jest.spyOn(bcrypt, 'hash')
+      await sut.hash('any_value')
+      expect(hashSpy).toHaveBeenCalledWith('any_value', salt)
+    })
+
+    test('Shold return a valid hash on hash success', async () => {
+      const sut = makeSut()
+      const hash = await sut.hash('any_value')
+      expect(hash).toBe('hash')
+    })
+
+    test('Shold throws if bcrypt throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(bcrypt, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const promise = sut.hash('any_value')
+      await expect(promise).rejects.toThrow()
+    })
   })
 
-  test('Shold return a valid hash on hash success', async () => {
-    const sut = makeSut()
-    const hash = await sut.hash('any_value')
-    expect(hash).toBe('hash')
-  })
+  describe('compare()', () => {
+    test('Shold call compare with correct values', async () => {
+      const sut = makeSut()
+      const compareSpy = jest.spyOn(bcrypt, 'compare')
+      await sut.compare('any_value', 'any_hash')
+      expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash')
+    })
 
-  test('Shold throws if bcrypt throws', async () => {
-    const sut = makeSut()
-    jest.spyOn(bcrypt, 'hash').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.hash('any_value')
-    await expect(promise).rejects.toThrow()
-  })
+    test('Shold return true when compare success', async () => {
+      const sut = makeSut()
+      const isValid = await sut.compare('any_value', 'any_hash')
+      expect(isValid).toBe(true)
+    })
 
-  test('Shold call compare with correct values', async () => {
-    const sut = makeSut()
-    const compareSpy = jest.spyOn(bcrypt, 'compare')
-    await sut.compare('any_value', 'any_hash')
-    expect(compareSpy).toHaveBeenCalledWith('any_value', 'any_hash')
-  })
+    test('Shold return false when compare fails', async () => {
+      const sut = makeSut()
+      jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
+      const isValid = await sut.compare('any_value', 'any_hash')
+      expect(isValid).toBe(false)
+    })
 
-  test('Shold return true when compare success', async () => {
-    const sut = makeSut()
-    const isValid = await sut.compare('any_value', 'any_hash')
-    expect(isValid).toBe(true)
-  })
-
-  test('Shold return false when compare fails', async () => {
-    const sut = makeSut()
-    jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(new Promise(resolve => resolve(false)))
-    const isValid = await sut.compare('any_value', 'any_hash')
-    expect(isValid).toBe(false)
-  })
-
-  test('Shold throws if compare throws', async () => {
-    const sut = makeSut()
-    jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const promise = sut.compare('any_value', 'any_hash')
-    await expect(promise).rejects.toThrow()
+    test('Shold throws if compare throws', async () => {
+      const sut = makeSut()
+      jest.spyOn(bcrypt, 'compare').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+      const promise = sut.compare('any_value', 'any_hash')
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
