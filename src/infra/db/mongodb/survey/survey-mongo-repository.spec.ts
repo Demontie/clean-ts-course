@@ -3,6 +3,10 @@ import { Collection } from 'mongodb'
 import { AddSurveyModel } from '../../../../domain/usecases/add-survey'
 import { MongoHelper } from '../helpers/mongo-helper'
 
+const makeSut = (): SurveyMongoRepository => {
+  return new SurveyMongoRepository()
+}
+
 const makeFakeAddSurveyModel = (): AddSurveyModel => ({
   question: 'any_question',
   answers: [
@@ -33,14 +37,23 @@ describe('Survey Mongo Repository', () => {
     await surveyColletions.deleteMany({})
   })
 
-  const makeSut = (): SurveyMongoRepository => {
-    return new SurveyMongoRepository()
-  }
+  describe('add()', () => {
+    test('Should add a survey on success', async () => {
+      const sut = makeSut()
+      await sut.add(makeFakeAddSurveyModel())
+      const survey = await surveyColletions.findOne({ question: 'any_question' })
+      expect(survey).toBeTruthy()
+    })
+  })
 
-  test('Should add a survey on success', async () => {
-    const sut = makeSut()
-    await sut.add(makeFakeAddSurveyModel())
-    const survey = await surveyColletions.findOne({ question: 'any_question' })
-    expect(survey).toBeTruthy()
+  describe('loadAll()', () => {
+    test('Should load all surveys on success', async () => {
+      await surveyColletions.insertMany([makeFakeAddSurveyModel(), makeFakeAddSurveyModel()])
+      const sut = makeSut()
+      const surveys = await sut.loadAll()
+      expect(surveys.length).toBe(2)
+      expect(surveys[0].question).toBe('any_question')
+      expect(surveys[1].question).toBe('any_question')
+    })
   })
 })
