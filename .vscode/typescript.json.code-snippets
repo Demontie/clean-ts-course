@@ -2,7 +2,7 @@
 	"Jest Test": {		
 		"prefix": ["test"],
 		"body": [
-			"interface SutTypes {",
+			"type SutTypes = {",
 				"  sut: PrincipalSut",
 			"}",
 			"const makeSut = (): SutTypes => {",
