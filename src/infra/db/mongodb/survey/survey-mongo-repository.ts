@@ -1,5 +1,5 @@
 import { MongoHelper } from '../helpers/mongo-helper'
-import { AddSurveyModel, AddSurveyRepository, LoadSurveysRepository, SurveyModel } from '../../../../data/usecases/add-survey/db-add-survey-protocols'
+import { AddSurveyModel, AddSurveyRepository, LoadSurveysRepository, SurveyModel } from '@/data/usecases/add-survey/db-add-survey-protocols'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {
   async loadAll (): Promise<SurveyModel[]> {
