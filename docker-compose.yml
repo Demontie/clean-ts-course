@@ -15,6 +15,8 @@ services:
     working_dir: /clean-ts-course
     restart: always
     command: bash -c "npm install --only=prod && npm run debug"    
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/clean-node-api
     volumes:
       - ./dist/:/clean-ts-course/dist/
       - ./package.json:/clean-ts-course/package.json
