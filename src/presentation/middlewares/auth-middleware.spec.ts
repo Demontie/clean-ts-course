@@ -1,25 +1,9 @@
 import { AccessDeniedError } from '../erros'
 import { AuthMiddleware } from './auth-middleware'
 import { forbidden, ok, serverError } from '../helpers/http/http-helper'
-import { HttpRequest, AccountModel, LoadAccountByToken } from './auth-middleware-protocols'
-
-const makeFakeAccount = (): AccountModel => (
-  {
-    id: 'valid_id',
-    name: 'valid_name',
-    email: 'valid_email@mail.com',
-    password: 'hashed_password'
-  }
-)
-
-const makeLoadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (token: string, role?: string): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(makeFakeAccount()))
-    }
-  }
-  return new LoadAccountByTokenStub()
-}
+import { HttpRequest, LoadAccountByToken } from './auth-middleware-protocols'
+import { throwError } from '@/domain/test'
+import { mockLoadAccountByToken } from '@/presentation/test'
 
 const makeHeaderRequest = (): HttpRequest => ({
   headers: {
@@ -31,8 +15,9 @@ type SutTypes = {
   sut: AuthMiddleware
   loadAccountByTokenStub: LoadAccountByToken
 }
+
 const makeSut = (role?: string): SutTypes => {
-  const loadAccountByTokenStub = makeLoadAccountByToken()
+  const loadAccountByTokenStub = mockLoadAccountByToken()
   const sut = new AuthMiddleware(loadAccountByTokenStub, role)
   return {
     sut,
@@ -66,13 +51,13 @@ describe('Auth Middleware', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(makeHeaderRequest())
     expect(httpResponse).toEqual(ok({
-      accountId: 'valid_id'
+      accountId: 'any_id'
     }))
   })
 
   test('Should return 500 if LoadAccountByToken throws', async () => {
     const { sut, loadAccountByTokenStub } = makeSut()
-    jest.spyOn(loadAccountByTokenStub, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadAccountByTokenStub, 'load').mockImplementationOnce(throwError)
     const httpResponse = await sut.handle(makeHeaderRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
