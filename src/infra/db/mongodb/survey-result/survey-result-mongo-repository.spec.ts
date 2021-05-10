@@ -3,7 +3,7 @@ import { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models/account'
-// import { SaveSurveyResultModel } from '@/domain/usecases/save-survey-result'
+// import { SaveSurveyResultParams } from '@/domain/usecases/save-survey-result'
 
 const makeSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
