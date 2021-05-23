@@ -3,7 +3,6 @@ import { Collection, ObjectId } from 'mongodb'
 import { MongoHelper } from '../helpers/mongo-helper'
 import { SurveyModel } from '@/domain/models/survey'
 import { AccountModel } from '@/domain/models/account'
-// import { SaveSurveyResultParams } from '@/domain/usecases/save-survey-result'
 
 const makeSut = (): SurveyResultMongoRepository => {
   return new SurveyResultMongoRepository()
@@ -73,6 +72,8 @@ describe('Survey Mongo Repository', () => {
       expect(surveyResult.surveyId).toEqual(survey.id)
       expect(surveyResult.answers[0].count).toBe(1)
       expect(surveyResult.answers[0].percent).toBe(100)
+      expect(surveyResult.answers[1].count).toBe(0)
+      expect(surveyResult.answers[1].percent).toBe(0)
     })
 
     test('Should update a survey result if its not new', async () => {
