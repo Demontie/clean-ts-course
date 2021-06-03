@@ -5,7 +5,7 @@ import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 import env from '../config/env'
 
-let surveyCollections: Collection
+let surveyCollection: Collection
 let accountCollection: Collection
 
 const makeAccessToken = async (): Promise<string> => {
@@ -37,8 +37,8 @@ describe('Survey Routes', () => {
   })
 
   beforeEach(async () => {
-    surveyCollections = await MongoHelper.getCollection('surveys')
-    await surveyCollections.deleteMany({})
+    surveyCollection = await MongoHelper.getCollection('surveys')
+    await surveyCollection.deleteMany({})
     accountCollection = await MongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })

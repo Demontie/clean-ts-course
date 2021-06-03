@@ -9,11 +9,11 @@ const makeSut = (): SurveyResultMongoRepository => {
 }
 
 let surveyResultColletions: Collection
-let surveyCollections: Collection
-let accountColletions: Collection
+let surveyCollection: Collection
+let accountCollection: Collection
 
 const makeSurvey = async (): Promise<SurveyModel> => {
-  const res = await surveyCollections.insertOne({
+  const res = await surveyCollection.insertOne({
     question: 'any_question',
     answers: [
       {
@@ -33,7 +33,7 @@ const makeSurvey = async (): Promise<SurveyModel> => {
 }
 
 const makeAccount = async (): Promise<AccountModel> => {
-  const res = await accountColletions.insertOne({
+  const res = await accountCollection.insertOne({
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password'
@@ -51,12 +51,12 @@ describe('Survey Mongo Repository', () => {
   })
 
   beforeEach(async () => {
-    surveyCollections = await MongoHelper.getCollection('surveys')
-    await surveyCollections.deleteMany({})
+    surveyCollection = await MongoHelper.getCollection('surveys')
+    await surveyCollection.deleteMany({})
     surveyResultColletions = await MongoHelper.getCollection('surveyResults')
     await surveyResultColletions.deleteMany({})
-    accountColletions = await MongoHelper.getCollection('accounts')
-    await accountColletions.deleteMany({})
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
   })
 
   describe('save()', () => {
@@ -83,7 +83,7 @@ describe('Survey Mongo Repository', () => {
       const sut = makeSut()
       const survey = await makeSurvey()
       const account = await makeAccount()
-      await surveyCollections.insertOne({
+      await surveyCollection.insertOne({
         accountId: new ObjectId(account.id),
         surveyId: new ObjectId(survey.id),
         answer: survey.answers[0].answer,

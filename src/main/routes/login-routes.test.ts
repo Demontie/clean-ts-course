@@ -4,7 +4,7 @@ import request from 'supertest'
 import { MongoHelper } from '@/infra/db/mongodb/helpers/mongo-helper'
 import app from '../config/app'
 
-let accountColletions: Collection
+let accountCollection: Collection
 describe('Login Routes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
@@ -15,8 +15,8 @@ describe('Login Routes', () => {
   })
 
   beforeEach(async () => {
-    accountColletions = await MongoHelper.getCollection('accounts')
-    await accountColletions.deleteMany({})
+    accountCollection = await MongoHelper.getCollection('accounts')
+    await accountCollection.deleteMany({})
   })
 
   describe('POST /signup', () => {
@@ -36,7 +36,7 @@ describe('Login Routes', () => {
   describe('POST /login', () => {
     test('Should return 200 on login', async () => {
       const password = await hash('123456', 12)
-      await accountColletions.insertOne({
+      await accountCollection.insertOne({
         name: 'Demontie',
         email: 'demontiecosta17@gmail.com',
         password
